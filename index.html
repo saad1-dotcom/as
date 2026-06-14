@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أسرار مربع التسعة الكاملة - وليم جان</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --text-primary: #2c3e50;
+            --text-secondary: #666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --border-color: #e0e0e0;
+            --shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-panel {
+            background: var(--bg-primary);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--danger-color) 100%);
+        }
+
+        .results-panel {
+            background: var(--bg-primary);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            animation: slideInRight 0.8s ease;
+        }
+
+        .result-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border-right: 4px solid var(--primary-color);
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-icon {
+            cursor: pointer;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .result-item {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .result-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-item.strong {
+            border-left-color: var(--success-color);
+        }
+
+        .result-item.critical {
+            border-left-color: var(--danger-color);
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .angle-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .angle-table th {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .angle-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+        }
+
+        .angle-table tr:nth-child(even) td {
+            background: var(--bg-secondary);
+        }
+
+        .critical-angle {
+            background: #fff3cd !important;
+            font-weight: bold;
+        }
+
+        .designer-section {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: var(--text-primary);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .designer-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.6);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .fibonacci-levels {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .time-cycle {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .advanced-calc {
+            background: #f3e5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: var(--danger-color);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: var(--success-color);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .help-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-help {
+            float: left;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .close-help:hover {
+            color: var(--text-primary);
+        }
+
+        .comparison-section {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option.selected {
+            border-color: var(--text-primary);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 أسرار مربع التسعة الكاملة</h1>
+            <p>النظام الكامل لوليم جان مع جميع المعادلات السرية</p>
+        </div>
+
+        <div class="main-grid">
+            <div class="input-panel">
+                <h3 style="margin-bottom: 20px; color: var(--text-primary);">📊 البيانات الأساسية</h3>
+                
+                <div class="input-group">
+                    <label for="price">السعر (قمة/قاع):</label>
+                    <input type="number" id="price" step="0.0001" placeholder="مثال: 1389.50">
+                </div>
+
+                <div class="input-group">
+                    <label for="type">نوع النقطة:</label>
+                    <select id="type">
+                        <option value="low">قاع سعري (صعود)</option>
+                        <option value="high">قمة سعرية (هبوط)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="scale">مضاعف الإزاحة (للأسعار الصغيرة):</label>
+                    <select id="scale">
+                        <option value="1">بدون إزاحة</option>
+                        <option value="10">× 10</option>
+                        <option value="100">× 100</option>
+                        <option value="1000">× 1000</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="date">التاريخ (للتحليل الزمني):</label>
+                    <input type="date" id="date">
+                </div>
+
+                <div class="input-group">
+                    <label for="comparison">مقارنة مع نقطة أخرى:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="price2" step="0.0001" placeholder="السعر الثاني">
+                        <select id="type2">
+                            <option value="low">قاع</option>
+                            <option value="high">قمة</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-calculate" onclick="calculateAll()">احسب جميع المستويات</button>
+                <button class="btn-calculate btn-secondary" onclick="exportResults()">تصدير النتائج</button>
+
+                <div class="designer-section" style="margin-top: 20px;">
+                    <div class="designer-title">✒️ تصميم وبرمجة</div>
+                    <div class="info-box">
+                        صمم هذه الصفحه ابراهيم اللاحم ابو حمود نسأل الله أن يكون هذا العمل خالصًا لوجهه الكريم، وأن يجعل أجره وثوابه لي ولوالديّ، لتكون هذه الصفحة مصدر نفع وفائدة للجميع.  ( للمراسلة تليجرام  @IBR369   )
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <h4>🎨 تخصيص الألوان:</h4>
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="changeTheme('default', this)"></div>
+                        <div class="color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="changeTheme('pink', this)"></div>
+                        <div class="color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="changeTheme('blue', this)"></div>
+                        <div class="color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="changeTheme('green', this)"></div>
+                        <div class="color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="changeTheme('sunset', this)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-panel">
+                <div class="tabs">
+                    <button class="tab-button active" onclick="showTab('basic', this)">المستويات الأساسية</button>
+                    <button class="tab-button" onclick="showTab('angles', this)">الزوايا السرية</button>
+                    <button class="tab-button" onclick="showTab('time', this)">التحليل الزمني</button>
+                    <button class="tab-button" onclick="showTab('advanced', this)">المستويات المتقدمة</button>
+                    <button class="tab-button" onclick="showTab('help', this)">المساعدة</button>
+                </div>
+
+                <div class="loader" id="loader">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 10px;">جاري الحساب...</p>
+                </div>
+
+                <div class="tab-content active" id="basic-tab">
+                    <div class="result-section">
+                        <div class="result-title">
+                            📈 مستويات الدعم والمقاومة الأساسية
+                            <span class="help-icon" onclick="showHelp('basic')">❓</span>
+                        </div>
+                        <div class="result-grid" id="basic-levels"></div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title">
+                            🎯 المستويات حسب الدورات
+                            <span class="help-icon" onclick="showHelp('cycles')">❓</span>
+                        </div>
+                        <table class="angle-table">
+                            <thead>
+                                <tr>
+                                    <th>الدورة</th>
+                                    <th>الزاوية</th>
+                                    <th>المعامل</th>
+                                    <th>المستوى السعري</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cycle-levels"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="angles-tab">
+                    <div class="result-section">
+                        <div class="result-title">
+                            🔮 الزوايا الرئيسية والفرعية
+                            <span class="help-icon" onclick="showHelp('angles')">❓</span>
+                        </div>
+                        <table class="angle-table">
+                            <thead>
+                                <tr>
+                                    <th>الزاوية</th>
+                                    <th>النوع</th>
+                                    <th>القوة</th>
+                                    <th>المستوى السعري</th>
+                                </tr>
+                            </thead>
+                            <tbody id="angle-levels"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="time-tab">
+                    <div class="result-section">
+                        <div class="result-title">
+                            ⏰ الدورات الزمنية
+                            <span class="help-icon" onclick="showHelp('time')">❓</span>
+                        </div>
+                        <div class="result-grid" id="time-cycles"></div>
+                    </div>
+
+                    <div class="time-cycle">
+                        <div class="result-title">📅 التواريخ المتوقعة للانعكاس</div>
+                        <div id="reversal-dates"></div>
+                    </div>
+
+                    <div class="fibonacci-levels">
+                        <div class="result-title">🔢 دورات فيبوناتشي الزمنية</div>
+                        <div id="fibo-time"></div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="advanced-tab">
+                    <div class="result-section">
+                        <div class="result-title">
+                            🌟 الصليب الأساسي والقطري
+                            <span class="help-icon" onclick="showHelp('advanced')">❓</span>
+                        </div>
+                        <div class="result-grid" id="cross-levels"></div>
+                    </div>
+
+                    <div class="advanced-calc">
+                        <div class="result-title">🎯 مربع 52 (التحليل السنوي)</div>
+                        <div id="square52"></div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title">📊 نسب جان المئوية</div>
+                        <div class="result-grid" id="gann-percentages"></div>
+                    </div>
+
+                    <div class="comparison-section" id="comparison-section" style="display: none;">
+                        <div class="result-title">🔄 مقارنة النقطتين</div>
+                        <div id="comparison-results"></div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="help-tab">
+                    <div class="result-section">
+                        <div class="result-title">📚 دليل استخدام النظام</div>
+                        <div id="help-content">
+                            <h3>مقدمة عن نظام Gann Square of Nine</h3>
+                            <p>نظام مربع التسعة هو واحد من أشهر نظريات التحليل الفني التي طورها وليم جان. يعتمد النظام على الرياضيات والهندسة لتحديد نقاط الدعم والمقاومة المحتملة.</p>
+                            
+                            <h3>المعادلات الأساسية</h3>
+                            <ul>
+                                <li><strong>المستوى = (الجذر التربيعي للسعر + المعامل)²</strong></li>
+                                <li>حيث المعامل = الزاوية / 180 (في بعض الحسابات) أو عوامل أخرى تعتمد على الدورة.</li>
+                                <li>الزوايا الأساسية: 45°, 90°, 180°, 270°, 360°</li>
+                            </ul>
+                            
+                            <h3>شرح الأقسام</h3>
+                            <ul>
+                                <li><strong>المستويات الأساسية:</strong> تعرض مستويات الدعم والمقاومة الرئيسية.</li>
+                                <li><strong>الزوايا السرية:</strong> تعرض الزوايا المختلفة وقوتها.</li>
+                                <li><strong>التحليل الزمني:</strong> يحسب الدورات الزمنية المحتملة للانعكاس.</li>
+                                <li><strong>المستويات المتقدمة:</strong> يحسب مستويات أكثر تعقيداً مثل الصليب الأساسي.</li>
+                            </ul>
+                            
+                            <h3>نصائح الاستخدام</h3>
+                            <ul>
+                                <li>استخدم مضاعف الإزاحة للأسعار الصغيرة (مثل العملات الرقمية) لجعل الحسابات أكثر دقة.</li>
+                                <li>قم بإدخال التاريخ للحصول على تحليل زمني دقيق.</li>
+                                <li>استخدم خيار المقارنة لمقارنة نقطتين مختلفتين.</li>
+                            </ul>
+                            
+                            <h3 style="margin-top: 20px;">فائدة المقارنة بين نقطتين</h3>
+                            <p>
+                                <strong>الهدف من المقارنة</strong> هو إيجاد "التوافق" أو "الرنين" بين نقطتين سعريتين مهمتين (مثل قاعين رئيسيين أو قمة وقاع تاريخيين). عندما تتوافق المستويات السعرية الناتجة من النقطتين (أي تكون قريبة جداً من بعضها)، فإن هذه المستويات المتوافقة تكتسب قوة وأهمية أكبر، وتعتبر مناطق دعم أو مقاومة محتملة قوية جداً.
+                            </p>
+                            <p>
+                                <strong>أما عن اختيار النقطة الأخرى،</strong> فلا يوجد قاعدة صارمة. الأفضل يعتمد على استراتيجية المحلل:
+                                <ul>
+                                    <li>يمكنك مقارنة قاع حالي <strong>بقاع تاريخي سابق</strong> لمعرفة ما إذا كان السعر يحترم نفس المستويات القديمة.</li>
+                                    <li>يمكنك مقارنة قمة حالية <strong>بآخر قاع مهم قبلها</strong> للبحث عن مناطق الانعكاس المحتملة.</li>
+                                </ul>
+                                بشكل عام، كلما كانت النقطتان المحددتان نقاطاً محورية ومهمة على الرسم البياني، كانت نتائج المقارنة أكثر جدارة بالثقة.
+                            </p>
+                            
+                            <hr style="margin: 25px 0;">
+                            <p style="text-align: center; font-style: italic; color: var(--text-secondary);">
+                                جمعه ونسقه ودققه ابراهيم اللاحم ابوحمود غفر الله له ولوالديه
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="help-modal" id="helpModal">
+        <div class="help-content">
+            <span class="close-help" onclick="closeHelp()">&times;</span>
+            <div id="modalHelpContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // نظام Gann Calculator المحسّن
+        const GannCalculator = {
+            calculateBasicLevels: function(price, type, scale) {
+                const sqrt = Math.sqrt(price * scale);
+                const levels = [];
+                
+                const gannFactors = [
+                    { name: '1/8', factor: 0.125, strength: 'weak' },
+                    { name: '1/4', factor: 0.25, strength: 'normal' },
+                    { name: '1/3', factor: 0.333, strength: 'normal' },
+                    { name: '3/8', factor: 0.375, strength: 'normal' },
+                    { name: '1/2', factor: 0.5, strength: 'strong' },
+                    { name: '5/8', factor: 0.625, strength: 'normal' },
+                    { name: '2/3', factor: 0.667, strength: 'normal' },
+                    { name: '3/4', factor: 0.75, strength: 'strong' },
+                    { name: '7/8', factor: 0.875, strength: 'weak' },
+                    { name: '1', factor: 1, strength: 'critical' },
+                    { name: '1.25', factor: 1.25, strength: 'normal' },
+                    { name: '1.5', factor: 1.5, strength: 'strong' },
+                    { name: '1.75', factor: 1.75, strength: 'normal' },
+                    { name: '2', factor: 2, strength: 'critical' }
+                ];
+                
+                gannFactors.forEach(gann => {
+                    const value = type === 'low' 
+                        ? Math.pow(sqrt + gann.factor, 2) / scale
+                        : Math.pow(sqrt - gann.factor, 2) / scale;
+                        
+                    if (value > 0) {
+                        levels.push({
+                            name: `${gann.name} (${(gann.factor * 180).toFixed(0)}°)`,
+                            value: value,
+                            strength: gann.strength,
+                            angle: gann.factor * 180
+                        });
+                    }
+                });
+                
+                return levels;
+            },
+
+            calculateAngles: function(price, type, scale) {
+                const angles = [
+                    { angle: 0, name: 'نقطة البداية', type: 'أساسي', strength: 'قوي جداً' },
+                    { angle: 22.5, name: 'زاوية فرعية', type: 'فرعي', strength: 'متوسط' },
+                    { angle: 45, name: 'قطري', type: 'أساسي', strength: 'قوي' },
+                    { angle: 67.5, name: 'زاوية فرعية', type: 'فرعي', strength: 'متوسط' },
+                    { angle: 90, name: 'كاردينال', type: 'أساسي', strength: 'قوي جداً' },
+                    { angle: 112.5, name: 'زاوية فرعية', type: 'فرعي', strength: 'متوسط' },
+                    { angle: 120, name: 'مثلث', type: 'أساسي', strength: 'قوي' },
+                    { angle: 135, name: 'قطري', type: 'أساسي', strength: 'قوي' },
+                    { angle: 157.5, name: 'زاوية فرعية', type: 'فرعي', strength: 'متوسط' },
+                    { angle: 180, name: 'مقابل', type: 'أساسي', strength: 'قوي جداً' },
+                    { angle: 225, name: 'قطري', type: 'أساسي', strength: 'قوي' },
+                    { angle: 270, name: 'كاردينال', type: 'أساسي', strength: 'قوي جداً' },
+                    { angle: 315, name: 'قطري', type: 'أساسي', strength: 'قوي' },
+                    { angle: 360, name: 'دورة كاملة', type: 'أساسي', strength: 'حرج' }
+                ];
+
+                const results = [];
+                angles.forEach(item => {
+                    const coefficient = item.angle / 180;
+                    const value = type === 'low'
+                        ? Math.pow(Math.sqrt(price * scale) + coefficient, 2) / scale
+                        : Math.pow(Math.sqrt(price * scale) - coefficient, 2) / scale;
+
+                    if (value > 0) {
+                        results.push({
+                            angle: item.angle,
+                            name: item.name,
+                            type: item.type,
+                            strength: item.strength,
+                            value: value
+                        });
+                    }
+                });
+
+                return results;
+            },
+
+            calculateTimeCycles: function(price, sqrt, date) {
+                const cycles = [
+                    { name: 'دورة قصيرة', days: Math.round(sqrt) },
+                    { name: 'دورة متوسطة', days: Math.round(sqrt * 2) },
+                    { name: 'دورة طويلة', days: Math.round(sqrt * 4) },
+                    { name: 'ربع سنة', days: 90 },
+                    { name: 'نصف سنة', days: 180 },
+                    { name: 'سنة كاملة', days: 360 }
+                ];
+
+                const fiboNumbers = [8, 13, 21, 34, 55, 89, 144, 233];
+
+                return { cycles, fiboNumbers };
+            },
+
+            calculateAdvancedLevels: function(price, type, scale) {
+                const sqrt = Math.sqrt(price * scale);
+                
+                const crossLevels = [
+                    { name: 'صليب أساسي 0°', coefficient: 0 },
+                    { name: 'صليب قطري 45°', coefficient: 0.25 },
+                    { name: 'صليب أساسي 90°', coefficient: 0.5 },
+                    { name: 'صليب قطري 135°', coefficient: 0.75 },
+                    { name: 'صليب أساسي 180°', coefficient: 1 },
+                    { name: 'صليب قطري 225°', coefficient: 1.25 },
+                    { name: 'صليب أساسي 270°', coefficient: 1.5 },
+                    { name: 'صليب قطري 315°', coefficient: 1.75 }
+                ];
+
+                const results = [];
+                crossLevels.forEach(level => {
+                    const value = type === 'low'
+                        ? Math.pow(sqrt + level.coefficient, 2) / scale
+                        : Math.pow(sqrt - level.coefficient, 2) / scale;
+
+                    if (value > 0) {
+                        results.push({
+                            name: level.name,
+                            value: value,
+                            strength: level.coefficient % 0.5 === 0 ? 'strong' : 'normal'
+                        });
+                    }
+                });
+
+                const actualPrice = price;
+                const gannPercentages = [
+                    { name: '12.5%', multiplier: 1.125 },
+                    { name: '25%', multiplier: 1.25 },
+                    { name: '37.5%', multiplier: 1.375 },
+                    { name: '50%', multiplier: 1.5 },
+                    { name: '62.5%', multiplier: 1.625 },
+                    { name: '75%', multiplier: 1.75 },
+                    { name: '100%', multiplier: 2 },
+                    { name: '200%', multiplier: 3 }
+                ];
+
+                const percentages = gannPercentages.map(percent => ({
+                    name: percent.name,
+                    value: type === 'low' ? actualPrice * percent.multiplier : actualPrice / percent.multiplier
+                }));
+
+                return { crossLevels: results, percentages };
+            },
+
+            comparePoints: function(point1, point2) {
+                const levels1 = this.calculateBasicLevels(point1.price, point1.type, point1.scale);
+                const levels2 = this.calculateBasicLevels(point2.price, point2.type, point1.scale); // Use same scale
+                
+                const confluence = [];
+                const threshold = 0.01; // 1% tolerance
+
+                levels1.forEach(l1 => {
+                    levels2.forEach(l2 => {
+                        if (Math.abs(l1.value - l2.value) / l1.value < threshold) {
+                            confluence.push({
+                                value: (l1.value + l2.value) / 2,
+                                source1: `${point1.type} ${point1.price} @ ${l1.name}`,
+                                source2: `${point2.type} ${point2.price} @ ${l2.name}`
+                            });
+                        }
+                    });
+                });
+                return confluence;
+            }
+        };
+
+        // DOM Manipulation and Event Handling
+        let allResults = {};
+
+        function calculateAll() {
+            const price = parseFloat(document.getElementById('price').value);
+            const type = document.getElementById('type').value;
+            const scale = parseInt(document.getElementById('scale').value);
+            const date = document.getElementById('date').value;
+
+            if (isNaN(price) || price <= 0) {
+                alert("الرجاء إدخال سعر صحيح.");
+                return;
+            }
+
+            const loader = document.getElementById('loader');
+            const resultsPanel = document.querySelector('.results-panel');
+            loader.classList.add('active');
+            resultsPanel.style.minHeight = '300px'; // Prevent layout shift
+
+            setTimeout(() => {
+                const sqrt = Math.sqrt(price * scale);
+                
+                // Calculations
+                const basicLevels = GannCalculator.calculateBasicLevels(price, type, scale);
+                const angleLevels = GannCalculator.calculateAngles(price, type, scale);
+                const { crossLevels, percentages } = GannCalculator.calculateAdvancedLevels(price, type, scale);
+                
+                // Displaying results
+                displayBasicLevels(basicLevels);
+                displayCycleLevels(basicLevels);
+                displayAngles(angleLevels);
+                displayCrossLevels(crossLevels);
+                displayGannPercentages(percentages);
+                displaySquare52(price, type);
+                
+                if (date) {
+                    const { cycles, fiboNumbers } = GannCalculator.calculateTimeCycles(price, sqrt, date);
+                    displayTimeCycles(cycles, date);
+                    displayFiboTime(fiboNumbers, date);
+                } else {
+                    document.getElementById('time-cycles').innerHTML = '<p>الرجاء إدخال التاريخ لعرض الدورات الزمنية.</p>';
+                    document.getElementById('fibo-time').innerHTML = '';
+                }
+                
+                const price2 = parseFloat(document.getElementById('price2').value);
+                if (!isNaN(price2) && price2 > 0) {
+                    const type2 = document.getElementById('type2').value;
+                    const point1 = { price, type, scale };
+                    const point2 = { price: price2, type: type2, scale };
+                    const confluence = GannCalculator.comparePoints(point1, point2);
+                    displayComparison(confluence);
+                } else {
+                    document.getElementById('comparison-section').style.display = 'none';
+                }
+
+                allResults = { basicLevels, angleLevels, crossLevels, percentages };
+                
+                loader.classList.remove('active');
+                resultsPanel.style.minHeight = '';
+
+            }, 200); // Reduced delay for faster response
+        }
+
+        // Display Functions
+        function displayBasicLevels(levels) {
+            const container = document.getElementById('basic-levels');
+            container.innerHTML = '';
+            levels.forEach(level => {
+                const strengthClass = level.strength === 'strong' ? 'strong' : (level.strength === 'critical' ? 'critical' : '');
+                const item = `
+                    <div class="result-item ${strengthClass}">
+                        <div class="result-label">${level.name}</div>
+                        <div class="result-value">${level.value.toFixed(4)}</div>
+                    </div>
+                `;
+                container.innerHTML += item;
+            });
+        }
+
+        function displayCycleLevels(levels) {
+            const container = document.getElementById('cycle-levels');
+            container.innerHTML = '';
+            levels.filter(l => [90, 180, 270, 360, 540, 720].includes(l.angle)).forEach(level => {
+                const row = `
+                    <tr>
+                        <td>${(level.angle / 360).toFixed(2)}</td>
+                        <td>${level.angle}°</td>
+                        <td>${(level.angle/180).toFixed(2)}</td>
+                        <td>${level.value.toFixed(4)}</td>
+                    </tr>
+                `;
+                container.innerHTML += row;
+            });
+        }
+
+        function displayAngles(levels) {
+            const container = document.getElementById('angle-levels');
+            container.innerHTML = '';
+            levels.forEach(level => {
+                const isCritical = level.strength.includes('جداً') || level.strength.includes('حرج');
+                const row = `
+                    <tr class="${isCritical ? 'critical-angle' : ''}">
+                        <td>${level.angle}° - ${level.name}</td>
+                        <td>${level.type}</td>
+                        <td>${level.strength}</td>
+                        <td>${level.value.toFixed(4)}</td>
+                    </tr>
+                `;
+                container.innerHTML += row;
+            });
+        }
+        
+        function displayTimeCycles(cycles, startDate) {
+            const container = document.getElementById('time-cycles');
+            container.innerHTML = '';
+            const baseDate = new Date(startDate);
+            if (isNaN(baseDate.getTime())) return;
+            cycles.forEach(cycle => {
+                const futureDate = new Date(baseDate.getTime());
+                futureDate.setDate(futureDate.getDate() + cycle.days);
+                const item = `
+                    <div class="result-item">
+                        <div class="result-label">${cycle.name} (${cycle.days} يوم)</div>
+                        <div class="result-value">${futureDate.toISOString().split('T')[0]}</div>
+                    </div>
+                `;
+                container.innerHTML += item;
+            });
+        }
+
+        function displayFiboTime(fiboNumbers, startDate) {
+            const container = document.getElementById('fibo-time');
+            container.innerHTML = '<div class="result-grid"></div>';
+            const grid = container.querySelector('.result-grid');
+            const baseDate = new Date(startDate);
+            if (isNaN(baseDate.getTime())) return;
+            fiboNumbers.forEach(days => {
+                const futureDate = new Date(baseDate.getTime());
+                futureDate.setDate(futureDate.getDate() + days);
+                 const item = `
+                    <div class="result-item">
+                        <div class="result-label">${days} يوم</div>
+                        <div class="result-value">${futureDate.toISOString().split('T')[0]}</div>
+                    </div>
+                `;
+                grid.innerHTML += item;
+            });
+        }
+
+        function displayCrossLevels(levels) {
+            const container = document.getElementById('cross-levels');
+            container.innerHTML = '';
+            levels.forEach(level => {
+                const strengthClass = level.strength === 'strong' ? 'strong' : '';
+                const item = `
+                    <div class="result-item ${strengthClass}">
+                        <div class="result-label">${level.name}</div>
+                        <div class="result-value">${level.value.toFixed(4)}</div>
+                    </div>
+                `;
+                container.innerHTML += item;
+            });
+        }
+
+        function displayGannPercentages(levels) {
+            const container = document.getElementById('gann-percentages');
+            container.innerHTML = '';
+            levels.forEach(level => {
+                 const item = `
+                    <div class="result-item">
+                        <div class="result-label">${level.name}</div>
+                        <div class="result-value">${level.value.toFixed(4)}</div>
+                    </div>
+                `;
+                container.innerHTML += item;
+            });
+        }
+        
+        function displaySquare52(price, type) {
+            const container = document.getElementById('square52');
+            const levels = [
+                { name: 'ربع سنوي (90°)', value: type === 'low' ? price * 1.25 : price / 1.25 },
+                { name: 'نصف سنوي (180°)', value: type === 'low' ? price * 1.5 : price / 1.5 },
+                { name: 'ثلاثة أرباع (270°)', value: type === 'low' ? price * 1.75 : price / 1.75 },
+                { name: 'سنوي كامل (360°)', value: type === 'low' ? price * 2 : price / 2 },
+            ];
+            container.innerHTML = '<div class="result-grid"></div>';
+            const grid = container.querySelector('.result-grid');
+            levels.forEach(level => {
+                const item = `
+                    <div class="result-item">
+                        <div class="result-label">${level.name}</div>
+                        <div class="result-value">${level.value.toFixed(4)}</div>
+                    </div>
+                `;
+                grid.innerHTML += item;
+            });
+        }
+
+        function displayComparison(levels) {
+            const section = document.getElementById('comparison-section');
+            const container = document.getElementById('comparison-results');
+            if(levels.length > 0) {
+                section.style.display = 'block';
+                container.innerHTML = '<p><strong>مستويات التوافق (Confluence):</strong></p><ul></ul>';
+                const list = container.querySelector('ul');
+                levels.slice(0, 10).forEach(level => { // show top 10
+                    const item = `<li><strong>${level.value.toFixed(4)}</strong> (من ${level.source1} و ${level.source2})</li>`;
+                    list.innerHTML += item;
+                });
+            } else {
+                 section.style.display = 'block';
+                 container.innerHTML = '<p>لا توجد مستويات توافق قوية بين النقطتين.</p>';
+            }
+        }
+
+        function showTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            element.classList.add('active');
+        }
+        
+        function exportResults() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const price = document.getElementById('price').value;
+            const type = document.getElementById('type').value;
+
+            let content = `Gann Square of Nine Analysis for ${type} at ${price}\n\n`;
+            
+            if(allResults.basicLevels) {
+                content += "--- Basic Levels ---\n";
+                allResults.basicLevels.forEach(l => {
+                    content += `${l.name}: ${l.value.toFixed(4)}\n`;
+                });
+            }
+
+            if(allResults.angleLevels) {
+                content += "\n--- Angle Levels ---\n";
+                allResults.angleLevels.forEach(l => {
+                    content += `${l.angle} deg: ${l.value.toFixed(4)}\n`;
+                });
+            }
+            
+            if(allResults.crossLevels) {
+                content += "\n--- Cross Levels ---\n";
+                allResults.crossLevels.forEach(l => {
+                    content += `${l.name}: ${l.value.toFixed(4)}\n`;
+                });
+            }
+            
+            doc.text(content, 10, 10);
+            doc.save(`gann_analysis_${price}.pdf`);
+        }
+        
+        function changeTheme(theme, element) {
+            const root = document.documentElement;
+            const themes = {
+                default: ['#667eea', '#764ba2'],
+                pink: ['#f093fb', '#f5576c'],
+                blue: ['#4facfe', '#00f2fe'],
+                green: ['#43e97b', '#38f9d7'],
+                sunset: ['#fa709a', '#fee140']
+            };
+            root.style.setProperty('--primary-color', themes[theme][0]);
+            root.style.setProperty('--secondary-color', themes[theme][1]);
+            
+            document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+    </script>
+</body>
+</html>
